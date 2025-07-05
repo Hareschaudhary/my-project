@@ -1,6 +1,7 @@
 import Contact from '../models/contacs.models.js';
 import mongoose from 'mongoose';
 
+
 export const GateContact = async (req, res) => {
   const {page =1 , limit = 5} = req.query
   const opctions ={
@@ -40,7 +41,7 @@ export const ShowContact = async (req, res) => {
 };
 
 export const AddContact = (req, res) => {
-  res.render('add-contact');
+  res.render('add-contact',);
 };
 
 export const PostContact = async (req, res) => {
@@ -52,7 +53,7 @@ export const PostContact = async (req, res) => {
       phone: req.body.phone,
       address: req.body.address,
     });
-    res.redirect('/');
+    res.redirect('/'); 
   }catch(error) {
     res.render('500', { message: error.message });
   }
