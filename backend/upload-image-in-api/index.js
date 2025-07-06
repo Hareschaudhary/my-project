@@ -2,6 +2,9 @@ import express from "express"
 const app = express()
 import StudentRoutes from "./routes/student.routes.js"
 import { DataBaseConnact } from "./config/database.js"
+import  { MulterError } from "multer"
+
+const PORT =process.env.PORT
 
 // server connact
 DataBaseConnact()
@@ -12,7 +15,14 @@ app.use(express.json())
 
 app.use('/api/student',StudentRoutes)
 
-const PORT =process.env.PORT
+app.use((error,req,res,next)=>{
+    if(error instanceof MulterError){
+        return res.status(400).send(`image err: ${error.message} : ${error.code}`)
+    }else if(error){
+       return res.status(500).send(`sumthing went wrong: ${error.message} `)  
+    }
+    next()
+})
 app.listen(PORT,()=>{
     console.log(`app listing port number ${PORT}`)
 })
