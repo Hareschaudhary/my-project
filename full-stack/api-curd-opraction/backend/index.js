@@ -3,6 +3,13 @@ const app = express()
 import StudentRoutes from "./routes/student.routes.js"
 import { DataBaseConnact } from "./config/database.js"
 import  { MulterError } from "multer"
+import path from "path"
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import cors from "cors"
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PORT =process.env.PORT
 
@@ -12,6 +19,10 @@ DataBaseConnact()
 // midleware
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
+app.use('/uploads',express.static(path.join(__dirname,'uploads')))
+// console.log('/uploads',express.static(path.join(__dirname,'uploads')))
+
+app.use(cors())
 
 app.use('/api/student',StudentRoutes)
 
