@@ -38,6 +38,9 @@ const upload = multer({
 Router.get("/", async (req, res) => {
   try {
     const search = req.query.search || "";
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
 
     const query = {
       $or: [
@@ -45,8 +48,17 @@ Router.get("/", async (req, res) => {
         { last_name: { $regex: search, $options: "i" } },
       ],
     };
-    const Studantdata = await Student.find(query);
-    res.json(Studantdata);
+    const totalCount = await Student.countDocuments(query);
+
+    const Studantdata = await Student.find(query).skip(skip).limit(limit);
+    res.json(
+      {
+        totalCount,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCount / limit),
+        Studantdata
+      });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
